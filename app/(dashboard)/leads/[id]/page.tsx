@@ -77,6 +77,12 @@ async function getLead(id: string) {
     },
   })
 
+  // Check if lead has already been promoted to investor
+  const existingInvestor = await prisma.investors.findFirst({
+    where: { lead_id: lead.id },
+    select: { id: true },
+  })
+
   // Get active users for assignment dropdown
   const activeUsers = await prisma.users.findMany({
     where: { status: "active" },
@@ -175,6 +181,8 @@ async function getLead(id: string) {
       ...user,
       id: Number(user.id),
     })),
+    isPromoted: !!existingInvestor,
+    promotedInvestorId: existingInvestor ? Number(existingInvestor.id) : null,
   }
 }
 

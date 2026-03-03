@@ -138,6 +138,8 @@ interface LeadDetailProps {
       name: string
       email: string
     }>
+    isPromoted?: boolean
+    promotedInvestorId?: number | null
   }
 }
 
@@ -717,14 +719,26 @@ export function LeadDetailView({ lead }: LeadDetailProps) {
                   <Plus className="h-4 w-4 mr-2" />
                   Add Activity
                 </Button>
-                <Button
-                  variant="default"
-                  className="w-full justify-start bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-md"
-                  onClick={() => setPromoteDialogOpen(true)}
-                >
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  Promote as Investor
-                </Button>
+                {lead.isPromoted ? (
+                  <Link href={`/investors/${lead.promotedInvestorId}`} className="block">
+                    <Button
+                      variant="default"
+                      className="w-full justify-start bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-md"
+                    >
+                      <TrendingUp className="h-4 w-4 mr-2" />
+                      View Investor Profile
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button
+                    variant="default"
+                    className="w-full justify-start bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-md"
+                    onClick={() => setPromoteDialogOpen(true)}
+                  >
+                    <TrendingUp className="h-4 w-4 mr-2" />
+                    Promote as Investor
+                  </Button>
+                )}
                 <Link href={`/leads/${lead.id}/edit`} className="block">
                   <Button variant="outline" className="w-full justify-start border-gray-300 hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700 transition-all">
                     <Edit className="h-4 w-4 mr-2" />
