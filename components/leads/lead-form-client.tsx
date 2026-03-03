@@ -110,7 +110,7 @@ function CollapsibleSection({
         className="w-full text-left"
       >
         <div className={cn(
-          "p-6 border-b border-gray-200 transition-colors",
+          "p-4 sm:p-6 border-b border-gray-200 transition-colors",
           gradient
         )}>
           <div className="flex items-center justify-between">
@@ -138,7 +138,7 @@ function CollapsibleSection({
           isOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0 overflow-hidden"
         )}
       >
-        <CardContent className="px-6 pb-6 pt-0 space-y-4">
+        <CardContent className="px-4 pb-4 pt-0 sm:px-6 sm:pb-6 space-y-4">
           {children}
         </CardContent>
       </div>
@@ -291,7 +291,7 @@ export function LeadFormClient({
     <div className="h-full flex flex-col bg-gray-50">
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-7xl mx-auto p-6">
+        <div className="max-w-7xl mx-auto p-3 sm:p-4 md:p-6">
           {/* Modern Hero Header (only for edit mode) */}
           {lead && (
             <LeadEditHero
@@ -304,17 +304,17 @@ export function LeadFormClient({
 
           {/* Header for new lead */}
           {!lead && (
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Create New Lead</h1>
                 <p className="text-gray-600 mt-1">Add a new lead to your CRM</p>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <button
                   type="button"
                   onClick={handleCancel}
                   disabled={isSubmitting}
-                  className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  className="px-4 py-2 sm:px-6 sm:py-2.5 text-sm sm:text-base border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                 >
                   Cancel
                 </button>
@@ -322,7 +322,7 @@ export function LeadFormClient({
                   type="submit"
                   onClick={form.handleSubmit(onSubmit)}
                   disabled={isSubmitting}
-                  className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center gap-2"
+                  className="px-4 py-2 sm:px-6 sm:py-2.5 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center gap-2"
                 >
                   {isSubmitting ? (
                     <>
@@ -343,9 +343,9 @@ export function LeadFormClient({
             </div>
           )}
 
-          <div className="grid grid-cols-12 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
             {/* Main Form Column */}
-            <div className="col-span-8 space-y-6">
+            <div className="lg:col-span-8 space-y-4 sm:space-y-6">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   {/* Contact Information Section */}
@@ -452,7 +452,7 @@ export function LeadFormClient({
             </div>
 
             {/* Sidebar */}
-            <div className="col-span-4 space-y-6">
+            <div className="lg:col-span-4 space-y-4 sm:space-y-6">
               {/* Progress Card */}
               <Card className="border-gray-200 shadow-lg overflow-hidden">
                 <CardHeader className="bg-gradient-to-r from-blue-50 to-sky-50 border-b border-gray-200">

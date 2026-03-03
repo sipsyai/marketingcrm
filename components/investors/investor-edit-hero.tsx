@@ -53,7 +53,7 @@ export function InvestorEditHero({ investor, isSubmitting, onSave, onCancel }: I
   }
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-green-700 p-8 shadow-xl mb-6">
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-green-700 p-4 sm:p-6 md:p-8 shadow-xl mb-6">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,white)]" />
 
@@ -65,15 +65,16 @@ export function InvestorEditHero({ investor, isSubmitting, onSave, onCancel }: I
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Button
               variant="secondary"
               className="bg-white/95 hover:bg-white text-gray-900 shadow-lg"
               onClick={onSave}
               disabled={isSubmitting}
             >
-              <Save className="h-4 w-4 mr-2" />
-              {isSubmitting ? "Saving..." : "Save Changes"}
+              <Save className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">{isSubmitting ? "Saving..." : "Save Changes"}</span>
+              <span className="sm:hidden">{isSubmitting ? "..." : "Save"}</span>
             </Button>
             <Button
               variant="secondary"
@@ -81,23 +82,23 @@ export function InvestorEditHero({ investor, isSubmitting, onSave, onCancel }: I
               onClick={onCancel}
               disabled={isSubmitting}
             >
-              <X className="h-4 w-4 mr-2" />
-              Cancel
+              <X className="h-4 w-4" />
+              <span className="hidden sm:inline ml-2">Cancel</span>
             </Button>
           </div>
         </div>
 
         {/* Investor Info */}
-        <div className="flex items-start gap-6">
-          <Avatar className="h-24 w-24 border-4 border-white/20 shadow-xl">
-            <AvatarFallback className="text-2xl font-bold bg-white/90 text-emerald-600">
+        <div className="flex items-start gap-3 sm:gap-4 md:gap-6">
+          <Avatar className="h-14 w-14 sm:h-20 sm:w-20 md:h-24 md:w-24 border-4 border-white/20 shadow-xl">
+            <AvatarFallback className="text-lg sm:text-xl md:text-2xl font-bold bg-white/90 text-emerald-600">
               {getInitials(investor.full_name)}
             </AvatarFallback>
           </Avatar>
 
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-4xl font-bold tracking-tight text-white">
+              <h1 className="text-xl sm:text-2xl md:text-4xl font-bold tracking-tight text-white">
                 {investor.full_name}
               </h1>
               <Badge variant="outline" className="bg-white/20 text-white border-white/30 text-sm">
@@ -120,21 +121,21 @@ export function InvestorEditHero({ investor, isSubmitting, onSave, onCancel }: I
               </Badge>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 text-white/90">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-white/90">
               <a href={`mailto:${investor.email}`} className="flex items-center gap-2 hover:text-white transition-colors">
                 <Mail className="h-4 w-4" />
                 <span className="text-sm">{investor.email}</span>
               </a>
               {investor.phone && (
                 <>
-                  <span className="text-white/40">•</span>
+                  <span className="text-white/40 hidden sm:inline">•</span>
                   <a href={`tel:${investor.phone}`} className="flex items-center gap-2 hover:text-white transition-colors">
                     <Phone className="h-4 w-4" />
                     <span className="text-sm">{investor.phone}</span>
                   </a>
                 </>
               )}
-              <span className="text-white/40">•</span>
+              <span className="text-white/40 hidden sm:inline">•</span>
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
                 <span className="text-sm">

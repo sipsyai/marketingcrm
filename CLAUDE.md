@@ -88,6 +88,32 @@ NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-secret-key-change-in-production"
 ```
 
+### Production Server (Deploy)
+```yaml
+Server IP: 192.168.1.23
+User: ali
+Project Path: /home/ali/marketingcrm
+Port: 5007
+Process Manager: PM2 (name: marketingcrm)
+Public URL: https://crm.sipsy.ai
+```
+
+**Deploy Komutu (SSH ile):**
+```bash
+# Python paramiko ile bağlan (192.168.1.23, ali)
+cd /home/ali/marketingcrm && git pull origin main
+cd /home/ali/marketingcrm && npm run build
+# PM2 restart - PORT env değişkeni gerekli
+cd /home/ali/marketingcrm && pm2 restart marketingcrm --update-env
+# Eğer pm2 process yoksa veya errored ise:
+# pm2 delete marketingcrm; cd /home/ali/marketingcrm && PORT=5007 pm2 start npm --name marketingcrm -- start
+```
+
+**Önemli Notlar:**
+- Port 3000 başka uygulama (Gardenhaus) tarafından kullanılıyor, CRM port **5007**'de çalışır
+- PM2 restart yaparken eski process port'u tutabilir, `pm2 delete` + yeniden başlatma gerekebilir
+- Sunucudaki `.env` dosyasında `NEXTAUTH_URL="https://crm.sipsy.ai"` ayarlı
+
 ---
 
 ## 🚀 Kurulum
