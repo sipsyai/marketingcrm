@@ -41,7 +41,7 @@ export function DashboardSidebar() {
   return (
     <div
       className={cn(
-        "relative flex flex-col border-r bg-gradient-to-b from-indigo-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 transition-all duration-300",
+        "relative hidden md:flex flex-col border-r bg-gradient-to-b from-indigo-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 transition-all duration-300",
         collapsed ? "w-16" : "w-64"
       )}
     >
