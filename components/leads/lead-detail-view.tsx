@@ -300,7 +300,7 @@ export function LeadDetailView({ lead }: LeadDetailProps) {
     <>
       <div className="space-y-6">
         {/* Modern Hero Header with Gradient */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-8 shadow-xl">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-4 sm:p-6 md:p-8 shadow-xl">
           {/* Background Pattern */}
           <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,white)]" />
 
@@ -312,11 +312,11 @@ export function LeadDetailView({ lead }: LeadDetailProps) {
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               </Link>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <Link href={`/leads/${lead.id}/edit`}>
                   <Button variant="secondary" className="bg-white/95 hover:bg-white text-gray-900 shadow-lg">
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit Lead
+                    <Edit className="h-4 w-4" />
+                    <span className="hidden sm:inline ml-2">Edit Lead</span>
                   </Button>
                 </Link>
                 <Button
@@ -324,25 +324,25 @@ export function LeadDetailView({ lead }: LeadDetailProps) {
                   className="bg-red-500/90 hover:bg-red-600 text-white shadow-lg"
                   onClick={() => setDeleteOpen(true)}
                 >
-                  <Trash className="h-4 w-4 mr-2" />
-                  Delete
+                  <Trash className="h-4 w-4" />
+                  <span className="hidden sm:inline ml-2">Delete</span>
                 </Button>
               </div>
             </div>
 
             {/* Lead Info */}
-            <div className="flex items-start gap-6">
-              <Avatar className="h-24 w-24 border-4 border-white/20 shadow-xl">
-                <AvatarFallback className="text-2xl font-bold bg-white/90 text-indigo-600">
+            <div className="flex items-start gap-3 sm:gap-4 md:gap-6">
+              <Avatar className="h-14 w-14 sm:h-20 sm:w-20 md:h-24 md:w-24 border-4 border-white/20 shadow-xl">
+                <AvatarFallback className="text-lg sm:text-xl md:text-2xl font-bold bg-white/90 text-indigo-600">
                   {getInitials(lead.full_name)}
                 </AvatarFallback>
               </Avatar>
 
-              <div className="flex-1">
-                <h1 className="text-4xl font-bold tracking-tight text-white mb-2">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl sm:text-2xl md:text-4xl font-bold tracking-tight text-white mb-2 truncate">
                   {lead.full_name}
                 </h1>
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-2 flex-wrap mb-4">
                   <Badge className={`${status.bg} ${status.color} border-none shadow-sm`}>
                     {status.label}
                   </Badge>
@@ -360,17 +360,17 @@ export function LeadDetailView({ lead }: LeadDetailProps) {
                   )}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-4 text-white/90">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-white/90">
                   <a href={`mailto:${lead.email}`} className="flex items-center gap-2 hover:text-white transition-colors">
                     <Mail className="h-4 w-4" />
                     <span className="text-sm">{lead.email}</span>
                   </a>
-                  <Separator orientation="vertical" className="h-4 bg-white/20" />
+                  <Separator orientation="vertical" className="h-4 bg-white/20 hidden sm:block" />
                   <a href={`tel:${lead.phone}`} className="flex items-center gap-2 hover:text-white transition-colors">
                     <Phone className="h-4 w-4" />
                     <span className="text-sm">{lead.phone}</span>
                   </a>
-                  <Separator orientation="vertical" className="h-4 bg-white/20" />
+                  <Separator orientation="vertical" className="h-4 bg-white/20 hidden sm:block" />
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
                     <span className="text-sm">
@@ -388,12 +388,12 @@ export function LeadDetailView({ lead }: LeadDetailProps) {
           <div className="lg:col-span-2">
             <Tabs defaultValue="details" className="w-full">
               <TabsList className="grid w-full grid-cols-2 h-12">
-                <TabsTrigger value="details" className="text-base">
-                  <Building2 className="h-4 w-4 mr-2" />
+                <TabsTrigger value="details" className="text-sm sm:text-base">
+                  <Building2 className="h-4 w-4 mr-2 hidden sm:block" />
                   Lead Information
                 </TabsTrigger>
-                <TabsTrigger value="activity" className="text-base">
-                  <Activity className="h-4 w-4 mr-2" />
+                <TabsTrigger value="activity" className="text-sm sm:text-base">
+                  <Activity className="h-4 w-4 mr-2 hidden sm:block" />
                   Activity Timeline
                 </TabsTrigger>
               </TabsList>

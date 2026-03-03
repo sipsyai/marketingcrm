@@ -56,10 +56,7 @@ export function PromoteInvestorDialog({
       toast.success("Lead successfully converted to Investor!")
       onOpenChange(false)
       setDescription("")
-      router.refresh()
-
-      // Optionally redirect to investor detail page
-      // router.push(`/investors/${data.investorId}`)
+      router.push(`/investors/${data.investorId}`)
     } catch (error: any) {
       console.error("Promotion error:", error)
       toast.error(error.message || "Failed to promote lead to investor")
