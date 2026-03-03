@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { requireApiAuth } from "@/lib/api-auth"
 
 export async function POST(request: NextRequest) {
+  const authError = await requireApiAuth("activities")
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { lead_id, investor_id, type, activity_type_id, subject, description, lead_status } = body
@@ -87,13 +91,16 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error("Error creating activity:", error)
     return NextResponse.json(
-      { success: false, message: error.message || "Failed to create activity" },
+      { success: false, message: "Failed to create activity" },
       { status: 500 }
     )
   }
 }
 
 export async function GET(request: NextRequest) {
+  const authError = await requireApiAuth("activities")
+  if (authError) return authError
+
   try {
     const { searchParams } = new URL(request.url)
     const lead_id = searchParams.get("lead_id")
@@ -233,7 +240,7 @@ export async function GET(request: NextRequest) {
   } catch (error: any) {
     console.error("Error fetching activities:", error)
     return NextResponse.json(
-      { success: false, message: error.message || "Failed to fetch activities" },
+      { success: false, message: "Failed to fetch activities" },
       { status: 500 }
     )
   }

@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
 interface DeleteLeadDialogProps {
   open: boolean
@@ -40,10 +41,12 @@ export function DeleteLeadDialog({
 
       if (!response.ok) throw new Error("Failed to delete lead")
 
+      toast.success("Lead deleted successfully")
       router.refresh()
       onClose()
     } catch (error) {
       console.error("Error deleting lead:", error)
+      toast.error("Failed to delete lead")
     } finally {
       setIsDeleting(false)
     }

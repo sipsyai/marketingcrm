@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -35,10 +36,12 @@ export function RolesClient({ roles: initialRoles }: RolesClientProps) {
   const refreshRoles = async () => {
     try {
       const response = await fetch("/api/settings/roles")
+      if (!response.ok) throw new Error("Failed to fetch roles")
       const data = await response.json()
       setRoles(data)
     } catch (error) {
       console.error("Failed to refresh roles:", error)
+      toast.error("Failed to refresh roles list")
     }
   }
 

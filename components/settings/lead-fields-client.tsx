@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -304,9 +305,15 @@ export function LeadFieldsClient({ fields: initialFields }: { fields: LeadField[
   // Fetch form sections
   useEffect(() => {
     fetch("/api/settings/lead-form-sections")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch form sections")
+        return res.json()
+      })
       .then((data) => setFormSections(data))
-      .catch((err) => console.error("Error fetching form sections:", err))
+      .catch((err) => {
+        console.error("Error fetching form sections:", err)
+        toast.error("Failed to load form sections")
+      })
   }, [])
 
   const sensors = useSensors(
@@ -328,14 +335,17 @@ export function LeadFieldsClient({ fields: initialFields }: { fields: LeadField[
 
       // Update backend
       try {
-        await fetch("/api/settings/lead-fields/reorder", {
+        const res = await fetch("/api/settings/lead-fields/reorder", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ fieldIds: newFields.map((f) => f.id) }),
         })
+        if (!res.ok) throw new Error("Failed to reorder fields")
         router.refresh()
       } catch (error) {
         console.error("Failed to reorder fields:", error)
+        toast.error("Failed to reorder fields")
+        router.refresh()
       }
     }
   }
@@ -376,14 +386,17 @@ export function LeadFieldsClient({ fields: initialFields }: { fields: LeadField[
   const handleSaveSections = async () => {
     setIsSavingSections(true)
     try {
-      await fetch("/api/settings/lead-form-sections", {
+      const res = await fetch("/api/settings/lead-form-sections", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formSections),
       })
+      if (!res.ok) throw new Error("Failed to save sections")
+      toast.success("Sections saved successfully")
       router.refresh()
     } catch (error) {
       console.error("Failed to save sections:", error)
+      toast.error("Failed to save sections")
     } finally {
       setIsSavingSections(false)
     }
@@ -391,12 +404,15 @@ export function LeadFieldsClient({ fields: initialFields }: { fields: LeadField[
 
   const handleToggle = async (id: number) => {
     try {
-      await fetch(`/api/settings/lead-fields/${id}/toggle`, {
+      const res = await fetch(`/api/settings/lead-fields/${id}/toggle`, {
         method: "POST",
       })
+      if (!res.ok) throw new Error("Failed to toggle field")
       router.refresh()
     } catch (error) {
       console.error("Failed to toggle field:", error)
+      toast.error("Failed to toggle field status")
+      router.refresh()
     }
   }
 

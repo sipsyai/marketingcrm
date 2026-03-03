@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
 interface DeleteInvestorDialogProps {
   open: boolean
@@ -40,10 +41,12 @@ export function DeleteInvestorDialog({
 
       if (!response.ok) throw new Error("Failed to delete investor")
 
+      toast.success("Investor deleted successfully")
       router.refresh()
       onOpenChange(false)
     } catch (error) {
       console.error("Error deleting investor:", error)
+      toast.error("Failed to delete investor")
     } finally {
       setIsDeleting(false)
     }

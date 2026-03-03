@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { requireApiAuth } from "@/lib/api-auth"
 
 // GET - Get single investor field
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireApiAuth("settings.investorFields")
+  if (authError) return authError
+
   try {
     const { id } = await params
     const field = await prisma.investor_fields.findUnique({
@@ -47,14 +51,12 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireApiAuth("settings.investorFields")
+  if (authError) return authError
+
   try {
     const { id } = await params
     const body = await request.json()
-
-    console.log("=== UPDATE INVESTOR FIELD DEBUG ===")
-    console.log("Field ID:", id)
-    console.log("Body:", JSON.stringify(body, null, 2))
-    console.log("Options received:", body.options)
 
     const {
       name,
@@ -88,17 +90,12 @@ export async function PUT(
       },
     })
 
-    console.log("Field updated successfully")
-
     // Update options if provided and field is select type
     if (options && Array.isArray(options) && (type === "select" || type === "multiselect" || type === "multiselect_dropdown")) {
-      console.log("Updating options, count:", options.length)
-
       // Delete existing options
       await prisma.investor_field_options.deleteMany({
         where: { investor_field_id: fieldId },
       })
-      console.log("Deleted existing options")
 
       // Create new options
       if (options.length > 0) {
@@ -113,7 +110,6 @@ export async function PUT(
             updated_at: new Date(),
           })),
         })
-        console.log("Created new options:", options.length)
       }
     }
 
@@ -126,8 +122,6 @@ export async function PUT(
         },
       },
     })
-
-    console.log("Updated field options count:", updatedField?.investor_field_options?.length)
 
     // Serialize BigInt values to number
     const serializedField = {
@@ -155,6 +149,9 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireApiAuth("settings.investorFields")
+  if (authError) return authError
+
   try {
     const { id } = await params
     const field = await prisma.investor_fields.findUnique({

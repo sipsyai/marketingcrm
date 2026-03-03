@@ -149,7 +149,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error("Error creating investor:", error)
     return NextResponse.json(
-      { error: error.message || "Failed to create investor" },
+      { error: "Failed to create investor" },
       { status: 500 }
     )
   }

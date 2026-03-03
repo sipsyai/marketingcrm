@@ -22,7 +22,10 @@ export async function GET(
       return NextResponse.json({ error: "Lead not found" }, { status: 404 })
     }
 
-    return NextResponse.json(lead)
+    return NextResponse.json({
+      ...lead,
+      id: Number(lead.id),
+    })
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch lead" }, { status: 500 })
   }
@@ -42,12 +45,6 @@ export async function PUT(
     const { id } = await params
     const body = await request.json()
     const { customFields, ...leadData } = body
-
-    console.log("=== UPDATE LEAD DEBUG ===")
-    console.log("Lead ID:", id)
-    console.log("Body:", JSON.stringify(body, null, 2))
-    console.log("Custom Fields:", customFields)
-    console.log("Lead Data:", leadData)
 
     // Get system field definitions (source, status, priority)
     const systemFields = await prisma.lead_fields.findMany({
@@ -132,7 +129,6 @@ export async function PUT(
           // Exclude if key is not a valid number (field ID)
           const fieldId = parseInt(key)
           if (isNaN(fieldId)) {
-            console.log("Skipping non-numeric field key:", key)
             return false
           }
           return true
@@ -165,7 +161,6 @@ export async function PUT(
     console.error("Error stack:", error?.stack)
     return NextResponse.json({
       error: "Failed to update lead",
-      details: error?.message || String(error)
     }, { status: 500 })
   }
 }
@@ -207,11 +202,6 @@ export async function PATCH(
     const { id } = await params
     const body = await request.json()
     const { user_id } = body
-
-    console.log("=== ASSIGN USER DEBUG ===")
-    console.log("Lead ID:", id)
-    console.log("User ID to assign:", user_id)
-    console.log("Session user:", session.user)
 
     // Verify lead exists
     const lead = await prisma.leads.findUnique({
@@ -332,7 +322,6 @@ export async function PATCH(
     console.error("Error assigning user to lead:", error)
     return NextResponse.json({
       error: "Failed to assign user",
-      details: error?.message || String(error)
     }, { status: 500 })
   }
 }

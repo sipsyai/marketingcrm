@@ -1,14 +1,17 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, Building2, CheckSquare, Clock } from "lucide-react"
+import { Users, Building2, Activity, Clock } from "lucide-react"
 import { motion } from "framer-motion"
 
 interface DashboardStatsProps {
   totalLeads: number
   totalInvestors: number
-  totalTasks: number
-  pendingTasks: number
+  totalActivities: number
+  pendingActivities: number
+  canAccessLeads?: boolean
+  canAccessInvestors?: boolean
+  canAccessActivities?: boolean
 }
 
 const stats = [
@@ -25,13 +28,13 @@ const stats = [
     bgColor: "bg-green-50 dark:bg-green-950/20",
   },
   {
-    title: "Total Tasks",
-    icon: CheckSquare,
+    title: "Total Activities",
+    icon: Activity,
     color: "from-purple-500 to-pink-500",
     bgColor: "bg-purple-50 dark:bg-purple-950/20",
   },
   {
-    title: "Pending Tasks",
+    title: "Pending Activities",
     icon: Clock,
     color: "from-orange-500 to-red-500",
     bgColor: "bg-orange-50 dark:bg-orange-950/20",
@@ -41,14 +44,24 @@ const stats = [
 export function DashboardStats({
   totalLeads,
   totalInvestors,
-  totalTasks,
-  pendingTasks,
+  totalActivities,
+  pendingActivities,
+  canAccessLeads = true,
+  canAccessInvestors = true,
+  canAccessActivities = true,
 }: DashboardStatsProps) {
-  const values = [totalLeads, totalInvestors, totalTasks, pendingTasks]
+  const allStats = [
+    { ...stats[0], value: totalLeads, visible: canAccessLeads },
+    { ...stats[1], value: totalInvestors, visible: canAccessInvestors },
+    { ...stats[2], value: totalActivities, visible: canAccessActivities },
+    { ...stats[3], value: pendingActivities, visible: canAccessActivities },
+  ]
+
+  const visibleStats = allStats.filter((s) => s.visible)
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {stats.map((stat, index) => {
+    <div className={`grid gap-4 md:grid-cols-2 ${visibleStats.length >= 4 ? "lg:grid-cols-4" : visibleStats.length === 3 ? "lg:grid-cols-3" : visibleStats.length === 2 ? "lg:grid-cols-2" : ""}`}>
+      {visibleStats.map((stat, index) => {
         const Icon = stat.icon
         return (
           <motion.div
@@ -67,7 +80,7 @@ export function DashboardStats({
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{values[index].toLocaleString()}</div>
+                <div className="text-3xl font-bold">{stat.value.toLocaleString()}</div>
               </CardContent>
             </Card>
           </motion.div>

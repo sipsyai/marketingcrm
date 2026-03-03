@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { requireApiAuth } from "@/lib/api-auth"
 
 // GET - List all investor fields with their options
 export async function GET() {
+  const authError = await requireApiAuth("settings.investorFields")
+  if (authError) return authError
+
   try {
     const fields = await prisma.investor_fields.findMany({
       include: {
@@ -36,10 +40,11 @@ export async function GET() {
 
 // POST - Create new investor field
 export async function POST(request: Request) {
+  const authError = await requireApiAuth("settings.investorFields")
+  if (authError) return authError
+
   try {
     const body = await request.json()
-    console.log("=== CREATE INVESTOR FIELD DEBUG ===")
-    console.log("Body:", JSON.stringify(body, null, 2))
 
     const {
       name,
@@ -113,10 +118,7 @@ export async function POST(request: Request) {
     console.error("Error message:", error?.message)
     console.error("Error stack:", error?.stack)
     return NextResponse.json(
-      {
-        error: "Failed to create investor field",
-        details: error?.message || String(error)
-      },
+      { error: "Failed to create investor field" },
       { status: 500 }
     )
   }

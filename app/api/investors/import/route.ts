@@ -177,7 +177,7 @@ export async function POST(request: NextRequest) {
           errors.push({
             row: rowNumber,
             field: "general",
-            message: error.message || "Unknown error",
+            message: "Failed to import row",
           });
         }
       }

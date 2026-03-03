@@ -143,6 +143,11 @@ export function AddActivityDialog({
         }),
       })
 
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || "Failed to create activity")
+      }
+
       const result = await response.json()
 
       if (result.success) {

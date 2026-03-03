@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { requireApiAuth } from "@/lib/api-auth"
 
 export async function GET() {
+  const authError = await requireApiAuth("settings.activityTypes")
+  if (authError) return authError
+
   try {
     const activityTypes = await prisma.activity_types.findMany({
       orderBy: { sort_order: "asc" },
@@ -17,13 +21,16 @@ export async function GET() {
   } catch (error: any) {
     console.error("Error fetching activity types:", error)
     return NextResponse.json(
-      { error: error.message || "Failed to fetch activity types" },
+      { error: "Failed to fetch activity types" },
       { status: 500 }
     )
   }
 }
 
 export async function POST(request: NextRequest) {
+  const authError = await requireApiAuth("settings.activityTypes")
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { name, label, icon, color, is_active, sort_order } = body
@@ -48,7 +55,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error("Error creating activity type:", error)
     return NextResponse.json(
-      { error: error.message || "Failed to create activity type" },
+      { error: "Failed to create activity type" },
       { status: 500 }
     )
   }

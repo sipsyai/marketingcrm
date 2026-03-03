@@ -11,6 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { toast } from "sonner"
 
 type LeadField = {
   id: number
@@ -50,9 +51,11 @@ export function DeleteFieldDialog({
         throw new Error("Failed to delete field")
       }
 
+      toast.success("Field deleted successfully")
       onSuccess()
     } catch (error) {
       console.error("Error deleting field:", error)
+      toast.error("Failed to delete field")
     } finally {
       setIsDeleting(false)
     }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
 import bcrypt from "bcryptjs"
+import { requireApiAuth } from "@/lib/api-auth"
 
 // Reset password schema
 const resetPasswordSchema = z.object({
@@ -13,6 +14,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireApiAuth("settings.users")
+  if (authError) return authError
+
   try {
     const { id } = await params
     const body = await request.json()

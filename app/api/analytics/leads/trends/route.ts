@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { subDays, startOfDay, format } from "date-fns"
+import { requireApiAuth } from "@/lib/api-auth"
 
 // Lead monthly/daily trends
 export async function GET(request: NextRequest) {
+  const authError = await requireApiAuth("leads")
+  if (authError) return authError
+
   try {
     const searchParams = request.nextUrl.searchParams
     const days = parseInt(searchParams.get("days") || "30")

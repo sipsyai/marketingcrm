@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { requireApiAuth } from "@/lib/api-auth"
 
 // Update user schema
 const updateUserSchema = z.object({
@@ -16,6 +17,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireApiAuth("settings.users")
+  if (authError) return authError
+
   try {
     const { id } = await params
     const user = await prisma.users.findUnique({
@@ -68,6 +72,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireApiAuth("settings.users")
+  if (authError) return authError
+
   try {
     const { id } = await params
     const body = await request.json()
@@ -124,8 +131,12 @@ export async function PUT(
     })
   } catch (error) {
     if (error instanceof z.ZodError) {
+      const firstIssue = error.issues[0]
+      const errorMessage = firstIssue
+        ? `${firstIssue.path.join(".")}: ${firstIssue.message}`
+        : "Validation error"
       return NextResponse.json(
-        { error: "Validation error", details: error.issues },
+        { error: errorMessage, details: error.issues },
         { status: 400 }
       )
     }
@@ -143,6 +154,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireApiAuth("settings.users")
+  if (authError) return authError
+
   try {
     const { id } = await params
     // Check if user exists

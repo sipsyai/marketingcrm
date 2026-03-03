@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { subMonths, subDays } from "date-fns"
+import { requireApiAuth } from "@/lib/api-auth"
 
 // Activity KPIs calculation
 export async function GET(request: NextRequest) {
+  const authError = await requireApiAuth("activities")
+  if (authError) return authError
+
   try {
     const now = new Date()
 

@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -202,7 +203,10 @@ export function LeadFormClient({
   // Fetch form sections configuration
   useEffect(() => {
     fetch("/api/settings/lead-form-sections")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch form sections")
+        return res.json()
+      })
       .then((data) => setFormSections(data))
       .catch((err) => console.error("Error fetching form sections:", err))
   }, [])
@@ -267,11 +271,12 @@ export function LeadFormClient({
         throw new Error(error.details || error.error || "Failed to save lead")
       }
 
+      toast.success(lead ? "Lead updated successfully" : "Lead created successfully")
       router.push("/leads")
       router.refresh()
     } catch (error: any) {
       console.error("Error saving lead:", error)
-      alert(error.message || "Failed to save lead")
+      toast.error(error.message || "Failed to save lead")
     } finally {
       setIsSubmitting(false)
     }

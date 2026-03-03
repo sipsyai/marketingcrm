@@ -91,12 +91,6 @@ export async function PUT(
     const body = await request.json()
     const { customFields, ...investorData } = body
 
-    console.log("=== UPDATE INVESTOR DEBUG ===")
-    console.log("Investor ID:", id)
-    console.log("Body:", JSON.stringify(body, null, 2))
-    console.log("Custom Fields:", customFields)
-    console.log("Investor Data:", investorData)
-
     // Validate required fields
     const requiredFields = await prisma.investor_fields.findMany({
       where: { is_required: true, is_active: true },
@@ -207,7 +201,6 @@ export async function PUT(
           // Exclude if key is not a valid number (field ID)
           const fieldId = parseInt(key)
           if (isNaN(fieldId)) {
-            console.log("Skipping non-numeric field key:", key)
             return false
           }
           return true
@@ -243,7 +236,6 @@ export async function PUT(
     console.error("Error stack:", error?.stack)
     return NextResponse.json({
       error: "Failed to update investor",
-      details: error?.message || String(error)
     }, { status: 500 })
   }
 }

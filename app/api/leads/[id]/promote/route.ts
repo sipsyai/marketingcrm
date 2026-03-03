@@ -194,10 +194,7 @@ export async function POST(
   } catch (error: any) {
     console.error("Error promoting lead to investor:", error)
     return NextResponse.json(
-      {
-        error: "Failed to promote lead to investor",
-        details: error?.message || String(error)
-      },
+      { error: "Failed to promote lead to investor" },
       { status: 500 }
     )
   }

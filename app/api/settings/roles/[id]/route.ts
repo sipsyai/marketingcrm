@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { requireApiAuth } from "@/lib/api-auth"
 
 // Permission schema
 const permissionSchema = z.object({
@@ -39,6 +40,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireApiAuth("settings.roles")
+  if (authError) return authError
+
   try {
     const { id } = await params
     const role = await prisma.roles.findUnique({
@@ -73,6 +77,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireApiAuth("settings.roles")
+  if (authError) return authError
+
   try {
     const { id } = await params
     const body = await request.json()
@@ -130,6 +137,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireApiAuth("settings.roles")
+  if (authError) return authError
+
   try {
     const { id } = await params
     // Check if role exists

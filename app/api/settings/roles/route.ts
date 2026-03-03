@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { requireApiAuth } from "@/lib/api-auth"
 
 // Permission schema
 const permissionSchema = z.object({
@@ -43,6 +44,9 @@ const createRoleSchema = z.object({
 
 // GET /api/settings/roles - List all roles
 export async function GET() {
+  const authError = await requireApiAuth("settings.roles")
+  if (authError) return authError
+
   try {
     const roles = await prisma.roles.findMany({
       orderBy: { created_at: "desc" },
@@ -72,6 +76,9 @@ export async function GET() {
 
 // POST /api/settings/roles - Create new role
 export async function POST(request: NextRequest) {
+  const authError = await requireApiAuth("settings.roles")
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const validated = createRoleSchema.parse(body)

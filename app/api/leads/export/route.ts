@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
       // Add dynamic field values
       leadFields.forEach((field) => {
         const fieldValue = lead.lead_field_values.find(
-          (fv) => fv.lead_field_id === field.id
+          (fv) => Number(fv.lead_field_id) === Number(field.id)
         );
 
         if (fieldValue) {

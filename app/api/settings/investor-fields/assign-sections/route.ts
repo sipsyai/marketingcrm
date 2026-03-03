@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { requireApiAuth } from "@/lib/api-auth"
 
 export async function POST(request: Request) {
+  const authError = await requireApiAuth("settings.investorFields")
+  if (authError) return authError
+
   try {
     const { fields } = await request.json()
 

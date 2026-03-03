@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { requireApiAuth } from "@/lib/api-auth"
 
 // Activity type distribution
 export async function GET(request: NextRequest) {
+  const authError = await requireApiAuth("activities")
+  if (authError) return authError
+
   try {
     const searchParams = request.nextUrl.searchParams
     const startDate = searchParams.get("startDate")

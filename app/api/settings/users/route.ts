@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
 import bcrypt from "bcryptjs"
+import { requireApiAuth } from "@/lib/api-auth"
 
 // Create user schema
 const createUserSchema = z.object({
@@ -9,12 +10,15 @@ const createUserSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  role_id: z.number().optional(),
+  role_id: z.number().nullable().optional(),
   status: z.enum(["active", "inactive"]).default("active"),
 })
 
 // GET /api/settings/users - List all users
 export async function GET() {
+  const authError = await requireApiAuth("settings.users")
+  if (authError) return authError
+
   try {
     const users = await prisma.users.findMany({
       orderBy: { created_at: "desc" },
@@ -60,6 +64,9 @@ export async function GET() {
 
 // POST /api/settings/users - Create new user
 export async function POST(request: NextRequest) {
+  const authError = await requireApiAuth("settings.users")
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const validated = createUserSchema.parse(body)
@@ -107,9 +114,12 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error("Zod validation error:", JSON.stringify(error.issues, null, 2))
+      const firstIssue = error.issues[0]
+      const errorMessage = firstIssue
+        ? `${firstIssue.path.join(".")}: ${firstIssue.message}`
+        : "Validation error"
       return NextResponse.json(
-        { error: "Validation error", details: error.issues },
+        { error: errorMessage, details: error.issues },
         { status: 400 }
       )
     }

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -47,10 +48,12 @@ export function UsersClient({ users: initialUsers, roles }: UsersClientProps) {
   const refreshUsers = async () => {
     try {
       const response = await fetch("/api/settings/users")
+      if (!response.ok) throw new Error("Failed to fetch users")
       const data = await response.json()
       setUsers(data)
     } catch (error) {
       console.error("Failed to refresh users:", error)
+      toast.error("Failed to refresh users list")
     }
   }
 

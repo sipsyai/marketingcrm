@@ -1,6 +1,6 @@
 "use client"
 
-import { Bell, Search, User } from "lucide-react"
+import { Bell, Search, User, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { signOut } from "next-auth/react"
+import Link from "next/link"
 
 interface DashboardHeaderProps {
   user: {
@@ -22,7 +23,7 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ user }: DashboardHeaderProps) {
-  const initials = user.name
+  const initials = (user?.name || "U")
     .split(" ")
     .map((n) => n[0])
     .join("")
@@ -30,13 +31,14 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
 
   return (
     <header className="flex h-16 items-center gap-4 border-b bg-background px-6">
-      {/* Search */}
+      {/* Search - disabled placeholder */}
       <div className="flex-1 max-w-md">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search leads, investors, tasks..."
             className="pl-10"
+            disabled
           />
         </div>
       </div>
@@ -44,9 +46,8 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
       {/* Right Section */}
       <div className="flex items-center gap-3">
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
+        <Button variant="ghost" size="icon">
           <Bell className="h-5 w-5" />
-          <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
         </Button>
 
         {/* User Menu */}
@@ -59,19 +60,20 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
                 </AvatarFallback>
               </Avatar>
               <div className="hidden md:flex flex-col items-start">
-                <span className="text-sm font-medium">{user.name}</span>
-                <span className="text-xs text-muted-foreground">{user.email}</span>
+                <span className="text-sm font-medium">{user?.name || "User"}</span>
+                <span className="text-xs text-muted-foreground">{user?.email || ""}</span>
               </div>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              Profile
+            <DropdownMenuItem asChild>
+              <Link href="/settings">
+                <Settings className="mr-2 h-4 w-4" />
+                Settings
+              </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600"

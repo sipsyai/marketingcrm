@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { subMonths } from "date-fns"
+import { requireApiAuth } from "@/lib/api-auth"
 
 // Investor KPIs calculation
 export async function GET(request: NextRequest) {
+  const authError = await requireApiAuth("investors")
+  if (authError) return authError
+
   try {
     const now = new Date()
     const lastMonth = subMonths(now, 1)

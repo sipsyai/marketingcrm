@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { subDays, startOfDay, format } from "date-fns"
+import { requireApiAuth } from "@/lib/api-auth"
 
 // Activity timeline - daily activity count with status breakdown
 export async function GET(request: NextRequest) {
+  const authError = await requireApiAuth("activities")
+  if (authError) return authError
+
   try {
     const searchParams = request.nextUrl.searchParams
     const days = parseInt(searchParams.get("days") || "30")

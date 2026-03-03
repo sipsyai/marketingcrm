@@ -249,7 +249,11 @@ export function ActivityTypesSettings({ activityTypes: initialTypes }: ActivityT
     setIsDialogOpen(true)
   }
 
+  const [isSaving, setIsSaving] = useState(false)
+
   const handleSave = async () => {
+    if (isSaving) return
+    setIsSaving(true)
     try {
       const url = editingType
         ? `/api/settings/activity-types/${editingType.id}`
@@ -283,6 +287,8 @@ export function ActivityTypesSettings({ activityTypes: initialTypes }: ActivityT
       setIsDialogOpen(false)
     } catch (error) {
       toast.error("Failed to save activity type")
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -519,9 +525,9 @@ export function ActivityTypesSettings({ activityTypes: initialTypes }: ActivityT
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSave}>
+            <Button onClick={handleSave} disabled={isSaving}>
               <Save className="h-4 w-4 mr-2" />
-              Save
+              {isSaving ? "Saving..." : "Save"}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -106,7 +106,7 @@ export async function POST(request: Request) {
 
     const sourceValue = sourceFieldId && customFields?.[sourceFieldId.id.toString()]
       ? customFields[sourceFieldId.id.toString()]
-      : "website"
+      : "other"
     const statusValue = statusFieldId && customFields?.[statusFieldId.id.toString()]
       ? customFields[statusFieldId.id.toString()]
       : "new"
@@ -170,7 +170,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error("Error creating lead:", error)
     return NextResponse.json(
-      { error: error.message || "Failed to create lead" },
+      { error: "Failed to create lead" },
       { status: 500 }
     )
   }

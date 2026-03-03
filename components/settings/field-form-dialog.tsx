@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -190,13 +191,6 @@ export function FieldFormDialog({
         options: isSelectType ? options : null,
       }
 
-      console.log("=== FIELD FORM DIALOG SUBMIT ===")
-      console.log("Field Type:", fieldType)
-      console.log("Is Select Type:", isSelectType)
-      console.log("Options Count:", options.length)
-      console.log("Options:", JSON.stringify(options, null, 2))
-      console.log("Payload:", JSON.stringify(payload, null, 2))
-
       const endpoint = fieldType === "investor" ? "investor-fields" : "lead-fields"
       const url = field
         ? `/api/settings/${endpoint}/${field.id}`
@@ -204,16 +198,11 @@ export function FieldFormDialog({
 
       const method = field ? "PUT" : "POST"
 
-      console.log("API URL:", url)
-      console.log("Method:", method)
-
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
-
-      console.log("Response Status:", response.status)
 
       if (!response.ok) {
         const errorData = await response.json()
@@ -221,14 +210,10 @@ export function FieldFormDialog({
         throw new Error(errorData.details || errorData.error || "Failed to save field")
       }
 
-      const responseData = await response.json()
-      console.log("API Success Response:", responseData)
-      console.log("Response Options Count:", responseData.lead_field_options?.length || responseData.investor_field_options?.length || 0)
-
       onSuccess()
     } catch (error: any) {
       console.error("Error saving field:", error)
-      alert(error.message || "Failed to save field")
+      toast.error(error.message || "Failed to save field")
     } finally {
       setIsSubmitting(false)
     }

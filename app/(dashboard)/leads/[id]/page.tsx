@@ -135,6 +135,7 @@ async function getLead(id: string) {
     investor_id: activity.investor_id ? Number(activity.investor_id) : null,
     assigned_to: activity.assigned_to ? Number(activity.assigned_to) : null,
     user_id: activity.user_id ? Number(activity.user_id) : null,
+    activity_type_id: activity.activity_type_id ? Number(activity.activity_type_id) : null,
   }))
 
   // Convert BigInt to number

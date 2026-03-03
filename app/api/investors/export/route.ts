@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
       // Add dynamic field values
       investorFields.forEach((field) => {
         const fieldValue = investor.investor_field_values.find(
-          (fv) => fv.investor_field_id === field.id
+          (fv) => Number(fv.investor_field_id) === Number(field.id)
         );
 
         if (fieldValue) {

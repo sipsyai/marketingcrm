@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { formatDistanceToNow } from "date-fns"
 
 interface Lead {
-  id: bigint
+  id: number
   full_name: string
   email: string | null
   phone: string

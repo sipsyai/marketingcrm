@@ -102,18 +102,6 @@ export function PermissionTree({ permissions, onChange, disabled = false }: Perm
 
             <div className="flex items-center space-x-2">
               <Checkbox
-                id="menu-tasks"
-                checked={permissions.menus.tasks}
-                onCheckedChange={(checked) => updateMenuPermission("tasks", !!checked)}
-                disabled={disabled}
-              />
-              <Label htmlFor="menu-tasks" className="cursor-pointer">
-                Tasks
-              </Label>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Checkbox
                 id="menu-activities"
                 checked={permissions.menus.activities}
                 onCheckedChange={(checked) => updateMenuPermission("activities", !!checked)}

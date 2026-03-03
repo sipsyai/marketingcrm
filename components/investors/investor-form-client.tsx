@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -215,7 +216,10 @@ export function InvestorFormClient({
   // Fetch form sections configuration
   useEffect(() => {
     fetch("/api/settings/investor-form-sections")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch form sections")
+        return res.json()
+      })
       .then((data) => setFormSections(data))
       .catch((err) => console.error("Error fetching form sections:", err))
   }, [])
@@ -280,11 +284,12 @@ export function InvestorFormClient({
         throw new Error(error.details || error.error || "Failed to save investor")
       }
 
+      toast.success(investor ? "Investor updated successfully" : "Investor created successfully")
       router.push("/investors")
       router.refresh()
     } catch (error: any) {
       console.error("Error saving investor:", error)
-      alert(error.message || "Failed to save investor")
+      toast.error(error.message || "Failed to save investor")
     } finally {
       setIsSubmitting(false)
     }
